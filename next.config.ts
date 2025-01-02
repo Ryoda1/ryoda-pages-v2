@@ -1,7 +1,4 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: "export",  // <=== enables static exports
-  reactStrictMode: true,
+module.exports = {
+  basePath: '/ryoda-pages-v2',  // Укажите имя вашего репозитория
+  trailingSlash: true,
 };
-
-module.exports = nextConfig;
