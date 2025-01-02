@@ -1,43 +1,44 @@
-name: Deploy to GitHub Pages
+name: Deploy
 
 on:
   push:
     branches:
-      - main  # Запускается при пуше в ветку main
+      - main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest  # Виртуальная машина Ubuntu для выполнения шагов
+  build:
+    name: Build
+    runs-on: ubuntu-latest
 
     steps:
-      # Шаг 1: Проверка репозитория
-      - name: Checkout repository
-        uses: actions/checkout@v3  # Используем стандартное действие для получения кода
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
-      # Шаг 2: Настройка Node.js с использованием локального action
-      - name: Setup Node.js
-        uses: ./actions/setup_node  # Указывает на ваше локальное действие
-
-      # Шаг 3: Установка зависимостей проекта
-      - name: Install dependencies
-        run: npm install  # Устанавливаем все зависимости через npm
-
-      # Шаг 4: Сборка проекта
-      - name: Build Next.js app
-        run: npm run build  # Запуск сборки Next.js
-
-      # Шаг 5: Экспорт статического сайта (для Next.js)
-      - name: Export static site
-        run: npm run export  # Экспортируем статический сайт
-
-      # Шаг 6: Деплой на GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Setup Node
+        uses: actions/setup-node@v1
         with:
-          branch: gh-pages  # Деплой на ветку gh-pages
-          folder: out       # Папка с экспортированными файлами (Next.js по умолчанию генерирует в 'out')
-          token: ${{ secrets.GITHUB_TOKEN }}  # Используем токен для аутентификации
+          node-version: 20
 
-          branch: gh-pages  # The branch to deploy to (usually 'gh-pages')
-          folder: out       # The folder containing the built static files
-          token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token to authenticate the action
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload production-ready build files
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-files
+          path: ./out
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: production-files
