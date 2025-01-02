@@ -3,36 +3,41 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Trigger deployment only on push to the main branch
+      - main  # Запускается при пуше в ветку main
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Виртуальная машина Ubuntu для выполнения шагов
+
     steps:
-      # Check out the repository
+      # Шаг 1: Проверка репозитория
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+      # Шаг 2: Настройка Node.js с использованием локального action
+      - name: Setup Node.js
+        uses: ./actions/setup_node  # Указывает на ваше локальное действие
 
-      # Install dependencies
+      # Шаг 3: Установка зависимостей проекта
       - name: Install dependencies
-        run: |
-          npm install
+        run: npm install
 
-      # Build the Next.js app (static export)
+      # Шаг 4: Сборка проекта
       - name: Build Next.js app
-        run: |
-          npm run build
-          npm run export  # Ensure you have a script to export to the 'out' folder
+        run: npm run build
 
-      # Deploy to GitHub Pages
+      # Шаг 5: Экспорт статического сайта (для Next.js)
+      - name: Export static site
+        run: npm run export
+
+      # Шаг 6: Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages  # Деплой на ветку gh-pages
+          folder: out       # Папка с экспортированными файлами
+          token: ${{ secrets.GITHUB_TOKEN }}  # Использование токена для аутентификации
+
         with:
           branch: gh-pages  # The branch to deploy to (usually 'gh-pages')
           folder: out       # The folder containing the built static files
