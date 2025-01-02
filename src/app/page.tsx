@@ -10,10 +10,10 @@ export default function Home() {
       <header className="row-start-1 flex flex-col items-center gap-x-6 p-8 sm:before:flex-1 w-full">
         <span className="flex items-center justify-between max-w-full sm:w-1/2 w-full h-6">
           <div className="flex flex-row items-center gap-x-2">
-            <span className="logo_text logo_prompt">
+            <span className="text-lg font-semibold leading-tight logo_text logo_prompt">
               $
             </span>
-            <span className="logo_text logo_pathname">
+            <span className="text-lg font-semibold leading-tight logo_text logo_pathname">
               cd /h/neko/
             </span>
             <span className="logo_cursor" />
