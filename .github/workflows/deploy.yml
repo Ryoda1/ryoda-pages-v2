@@ -12,7 +12,7 @@ jobs:
     steps:
       # Шаг 1: Проверка репозитория
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Используем стандартное действие для получения кода
 
       # Шаг 2: Настройка Node.js с использованием локального action
       - name: Setup Node.js
@@ -20,25 +20,24 @@ jobs:
 
       # Шаг 3: Установка зависимостей проекта
       - name: Install dependencies
-        run: npm install
+        run: npm install  # Устанавливаем все зависимости через npm
 
       # Шаг 4: Сборка проекта
       - name: Build Next.js app
-        run: npm run build
+        run: npm run build  # Запуск сборки Next.js
 
       # Шаг 5: Экспорт статического сайта (для Next.js)
       - name: Export static site
-        run: npm run export
+        run: npm run export  # Экспортируем статический сайт
 
       # Шаг 6: Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages  # Деплой на ветку gh-pages
-          folder: out       # Папка с экспортированными файлами
-          token: ${{ secrets.GITHUB_TOKEN }}  # Использование токена для аутентификации
+          folder: out       # Папка с экспортированными файлами (Next.js по умолчанию генерирует в 'out')
+          token: ${{ secrets.GITHUB_TOKEN }}  # Используем токен для аутентификации
 
-        with:
           branch: gh-pages  # The branch to deploy to (usually 'gh-pages')
           folder: out       # The folder containing the built static files
           token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token to authenticate the action
