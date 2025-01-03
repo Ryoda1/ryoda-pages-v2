@@ -23,7 +23,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: dir check
-        run: ls -R ./public/
+        run: pwd && ls -R ./public/
 
       - name: Build project
         run: npm run build
