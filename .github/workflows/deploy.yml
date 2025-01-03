@@ -22,8 +22,10 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
 
+      - name: dir check
+        run: ls -R ./public/
+
       - name: Build project
-        run: ls
         run: npm run build
 
       - name: Upload production-ready build files
